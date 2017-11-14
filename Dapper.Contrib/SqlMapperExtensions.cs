@@ -56,6 +56,7 @@ namespace Dapper.Contrib.Extensions
         /// </summary>
         /// <param name="type">The <see cref="Type"/> to get a table name for.</param>
         public delegate string TableNameMapperDelegate(Type type);
+        public static bool pluralizing = true;
 
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> KeyProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> ExplicitKeyProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
@@ -284,9 +285,14 @@ namespace Dapper.Contrib.Extensions
                 }
                 else
                 {
-                    name = type.Name + "s";
-                    if (type.IsInterface() && name.StartsWith("I"))
-                        name = name.Substring(1);
+                    if(pluralizing)
+                    {
+                        name = type.Name + "s";
+                        if (type.IsInterface() && name.StartsWith("I"))
+                            name = name.Substring(1);
+                    }
+                    else
+                       name = type.Name;
                 }
             }
 
